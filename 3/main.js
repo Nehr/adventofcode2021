@@ -1044,5 +1044,133 @@ const partOne = () => {
   return parseInt(gamma, 2) * parseInt(epsilon, 2);
 };
 
+const partTwo = () => {
+  const findCommonValue = (array, keepers) => {
+    const output = [];
+    array.forEach(line => {
+      const zero = (line.match(/0/g) || []).length;
+      const one = (line.match(/1/g) || []).length;
+      if (keepers === 1) {
+        // console.log('keep high values');
+        if (one > zero) {
+          output.push(1);
+        } else if (zero > one) {
+          output.push(0);
+        } else {
+          output.push(1);
+        }
+      } else {
+        // console.log('keep low values');
+        if (one > zero) {
+          output.push(0);
+        } else if (zero > one) {
+          output.push(1);
+        } else {
+          output.push(0);
+        }
+      }
+    });
+
+    return output;
+  };
+
+  const currentCommonValue = (arrayData, ind, keepers) => {
+    const newArrData = [];
+    if (arrayData.length > 0) {
+      for (let i = 0; i < arrayData[0].length; i++)
+        newArrData.push('');
+    }
+
+    arrayData.forEach((line) => {
+      line.split('').forEach((char, index) => newArrData[index] += `${char}`);
+    });
+
+    let commonValue = findCommonValue(newArrData, keepers);
+    // console.log(`commonValue[ind](${ind}): ${commonValue[ind]}`);
+
+    return commonValue[ind];
+  };
+
+  const getOxyGenData = () => {
+    const oxyGenData = [...data];
+
+    const values = oxyGenData[0].length;
+    //console.log('values', values);
+
+    for (let i = 0; i < values; i++) {
+      if (oxyGenData.length > 0) {
+        let commonValue = currentCommonValue(oxyGenData, i, 1);
+        //console.log('oxyGenData length', oxyGenData.length);
+        //console.log('commonValue', commonValue);
+        let toRemove = [];
+        oxyGenData.forEach((value, index) => {
+          if (!value.startsWith(commonValue, i)) {
+            //console.log(`- remove item ${value} at index ${index}`);
+            toRemove.push(value);
+          } else {
+            //console.log(`+ keep item ${value} at index ${index}`);
+          }
+        });
+        //console.log('toRemove', toRemove);
+        toRemove.forEach(value => {
+          const arrIndex = oxyGenData.indexOf(value);
+          oxyGenData.splice(arrIndex, 1);
+        });
+        toRemove = [];
+        //console.log([...oxyGenData]);
+        //console.log('\n');
+      }
+    }
+
+    return parseInt(oxyGenData[0], 2);
+  };
+
+  const getCarbScrubData = () => {
+    const carbScrubData = [...data];
+
+    const values = carbScrubData[0].length;
+    // console.log('values', values);
+
+    for (let i = 0; i < values; i++) {
+      if (carbScrubData.length > 1) {
+        let commonValue = currentCommonValue(carbScrubData, i, 0);
+        // console.log('carbScrubData length', carbScrubData.length);
+        // console.log('commonValue', commonValue);
+        let toRemove = [];
+        carbScrubData.forEach((value, index) => {
+          if (!value.startsWith(commonValue, i)) {
+            // console.log(`- remove item ${value} at index ${index}`);
+            toRemove.push(value);
+          } else {
+            // console.log(`+ keep item ${value} at index ${index}`);
+          }
+        });
+        // console.log('toRemove', toRemove);
+        toRemove.forEach(value => {
+          const arrIndex = carbScrubData.indexOf(value);
+          carbScrubData.splice(arrIndex, 1);
+        });
+        toRemove = [];
+        // console.log([...carbScrubData]);
+        // console.log('\n');
+      }
+    }
+
+    return parseInt(carbScrubData[0], 2);
+  };
+
+  const oxy = getOxyGenData();
+  const co = getCarbScrubData();
+  const answer = oxy * co;
+
+  return {
+    oxy,
+    co,
+    answer,
+  };
+};
+
 const part_one = partOne();
 console.log('part one answer: ', part_one);
+const part_two = partTwo();
+console.log('part two answer:\n', part_two);
