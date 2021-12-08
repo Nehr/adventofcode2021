@@ -1,2 +1,2 @@
 # adventofcode2021
-Figured I'd continue to learn some Python
+Figured I'd continue to learn some Python... and then I just started doing JS again...
